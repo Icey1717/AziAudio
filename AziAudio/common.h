@@ -36,6 +36,8 @@
 #elif defined(_WIN32)
 #include <windows.h>
 #include <commctrl.h>
+#elif defined(_ANDROID)
+#include <aaudio/AAudio.h>
 #endif
 
 #ifdef USE_PRINTF

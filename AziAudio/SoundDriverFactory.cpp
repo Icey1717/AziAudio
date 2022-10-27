@@ -10,12 +10,14 @@
 ****************************************************************************/
 #include "SoundDriverFactory.h"
 #include "NoSoundDriver.h"
+#ifndef OS_ANDROID
 #include "DirectSoundDriver.h"
 #include "DirectSoundDriverLegacy.h"
 #include "WASAPISoundDriver.h"
 #include "WaveOutSoundDriver.h"
 #include "XAudio2SoundDriver.h"
 #include "XAudio2SoundDriverLegacy.h"
+#endif
 
 int SoundDriverFactory::FactoryNextSlot = 0;
 SoundDriverFactory::FactoryDriversStruct SoundDriverFactory::FactoryDrivers[MAX_FACTORY_DRIVERS];
@@ -24,12 +26,15 @@ int SoundDriverFactory::InitDrivers()
 {
 	return
 		NoSoundDriver::ClassRegistered
+#ifndef OS_ANDROID
 		+ DirectSoundDriver::ClassRegistered
 		+ DirectSoundDriverLegacy::ClassRegistered
 		+ WASAPISoundDriver::ClassRegistered 
 		+ WaveOutSoundDriver::ClassRegistered
 		+ XAudio2SoundDriver::ClassRegistered
-		+ XAudio2SoundDriverLegacy::ClassRegistered;
+		+ XAudio2SoundDriverLegacy::ClassRegistered
+#endif
+		;
 }
 
 SoundDriverInterface* SoundDriverFactory::CreateSoundDriver(SoundDriverType DriverID)

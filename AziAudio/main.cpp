@@ -34,7 +34,9 @@ SoundDriverInterface *snd = NULL;
 bool ai_delayed_carry;  // Borrowed from MAME and Mupen64Plus
 bool bBackendChanged = false;
 
+#ifdef _WIN32
 void SetTimerResolution(void);
+#endif
 
 #ifdef USE_PRINTF
   void RedirectIOToConsole();
@@ -98,7 +100,9 @@ EXPORT Boolean CALL InitiateAudio(AUDIO_INFO Audio_Info) {
 
 	if (Configuration::getResTimer() == true)
 	{
+#ifdef _WIN32
 		SetTimerResolution();
+#endif
 	}
 
 	memcpy(&AudioInfo, &Audio_Info, sizeof(AUDIO_INFO));
@@ -177,14 +181,16 @@ EXPORT void CALL AiDacrateChanged(int SystemType) {
 		return;
 
 	Dacrate = *AudioInfo.AI_DACRATE_REG & 0x00003FFF;
-#ifdef _DEBUG
+#if defined(_DEBUG) && defined(WIN32)
 	if (Dacrate != *AudioInfo.AI_DACRATE_REG)
+	{
 		MessageBoxA(
 			NULL,
 			"Unknown/reserved bits in AI_DACRATE_REG set.",
 			"Warning",
 			MB_ICONWARNING
 		);
+	}
 #endif
 	switch (SystemType) {
 		default         :  assert(FALSE);

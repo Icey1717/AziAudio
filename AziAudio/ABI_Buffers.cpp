@@ -13,6 +13,12 @@
 #else
 #define FFFC_MASK 0xFFFF
 #endif
+
+#ifdef _ANDROID
+#define min(a,b) (((a)<(b))?(a):(b))
+#define max(a,b) (((a)>(b))?(a):(b))
+#endif
+
 /* memset() and memcpy() */
 #include <string.h>
 

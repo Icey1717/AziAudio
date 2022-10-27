@@ -11,7 +11,17 @@
 
 #pragma once
 #include <cstdio>
+
+#ifdef WIN32
 #include <Windows.h>
+#else
+typedef unsigned int BOOL, BOOLEAN;
+typedef unsigned int DWORD;
+typedef unsigned long long DWORD64, QWORD;
+typedef unsigned short WORD;
+typedef unsigned char BYTE, byte;
+typedef unsigned int UINT;
+#endif
 
 typedef struct 
 {

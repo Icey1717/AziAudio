@@ -2,7 +2,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <ImportGroup Label="PropertySheets">
-    <Import Project="PlatformWin.props"/>
+    <Import Project="PlatformAndroid.props"/>
   </ImportGroup>
 
   <PropertyGroup>
@@ -18,9 +18,6 @@
     <ClCompile>
       <EnableEnhancedInstructionSet></EnableEnhancedInstructionSet>
     </ClCompile>
-    <Link>
-      <TargetMachine>MachineX86</TargetMachine>
-    </Link>
   </ItemDefinitionGroup>
 
 </Project>

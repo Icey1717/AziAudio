@@ -129,8 +129,10 @@ void Configuration::SaveSettings()
 */
 void Configuration::LoadDefaults()
 {
+#ifdef _WIN32
 	EnumDeviceCount = 0;
 	EnumDriverCount = 0;
+#endif
 	safe_strcpy(Configuration::configAudioLogFolder, 499, "D:\\");
 #if defined(_MSC_VER) && !defined(_CRT_SECURE_NO_WARNINGS) && !defined(_XBOX)
 	strcpy_s(Configuration::configAudioLogFolder, 500, "D:\\");
@@ -148,7 +150,9 @@ void Configuration::LoadDefaults()
 	}
 #endif
 	configVolume = 0; /* 0:  max volume; 100:  min volume */
+#ifdef _WIN32
 	EnumDriverCount = SoundDriverFactory::EnumDrivers(EnumDriverType, 10); // TODO: This needs to be fixed.  10 is an arbitrary number which doesn't meet the 20 set in MAX_FACTORY_DRIVERS
+#endif
 	setDriver(SoundDriverFactory::DefaultDriver());	
 	setAIEmulation(true);
 	setSyncAudio(true);

@@ -83,7 +83,7 @@
 		LinkLibraryDependencies="true"
 		UseLibraryDependencyInputs="false"
 		UseUnicodeResponseFiles="true"
-		AdditionalOptions="/IGNORE:4199 /OPT:ICF=3"
+		AdditionalOptions=""
 		ShowProgress="0"
 		LinkIncremental="1"
 		SuppressStartupBanner="true"

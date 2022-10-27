@@ -11,6 +11,8 @@
 
 #include "audiohle.h"
 
+#include <string.h>
+
 static inline size_t align(size_t x, size_t amount)
 {
 	--amount;

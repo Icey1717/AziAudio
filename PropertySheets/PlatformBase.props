@@ -27,7 +27,6 @@
       <OutputFile>$(OutDir)$(ProjectName).bsc</OutputFile>
     </Bscmake>
     <ClCompile>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WIN32;_WINDOWS;WIN32_LEAN_AND_MEAN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
       <PreprocessToFile>false</PreprocessToFile>
       <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
@@ -83,52 +82,6 @@
       <LinkLibraryDependencies>true</LinkLibraryDependencies>
       <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
     </ProjectReference>
-    <Link>
-      <SubSystem>Windows</SubSystem>
-      <MinimumRequiredVersion>5.01</MinimumRequiredVersion>
-      <RegisterOutput>false</RegisterOutput>
-      <PerUserRedirection>false</PerUserRedirection>
-      <AdditionalOptions>/IGNORE:4199 /OPT:ICF=3 %(AdditionalOptions)</AdditionalOptions>
-      <ShowProgress>NotSet</ShowProgress>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <ManifestFile>$(IntDir)$(TargetFileName).intermediate.manifest</ManifestFile>
-      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
-      <ModuleDefinitionFile />
-      <DelayLoadDLLs>advapi32.dll;userenv.dll;shell32.dll;shlwapi.dll;ws2_32.dll;version.dll;wtsapi32.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
-      <IgnoreEmbeddedIDL>false</IgnoreEmbeddedIDL>
-      <TypeLibraryResourceID>1</TypeLibraryResourceID>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AssemblyDebug />
-      <ProgramDatabaseFile>$(TargetDir)pdb\$(TargetName).pdb</ProgramDatabaseFile>
-      <GenerateMapFile>true</GenerateMapFile>
-      <MapFileName>$(TargetDir)map\$(TargetName).map</MapFileName>
-      <MapExports>false</MapExports>
-      <HeapReserveSize>0</HeapReserveSize>
-      <HeapCommitSize>0</HeapCommitSize>
-      <StackReserveSize>0</StackReserveSize>
-      <StackCommitSize>0</StackCommitSize>
-      <LargeAddressAware />
-      <TerminalServerAware />
-      <SwapRunFromCD>false</SwapRunFromCD>
-      <SwapRunFromNET>false</SwapRunFromNET>
-      <OptimizeReferences>true</OptimizeReferences>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <ProfileGuidedDatabase />
-      <NoEntryPoint>false</NoEntryPoint>
-      <SetChecksum>false</SetChecksum>
-      <RandomizedBaseAddress>false</RandomizedBaseAddress>
-      <FixedBaseAddress>false</FixedBaseAddress>
-      <DataExecutionPrevention />
-      <TurnOffAssemblyGeneration>false</TurnOffAssemblyGeneration>
-      <SupportUnloadOfDelayLoadedDLL>false</SupportUnloadOfDelayLoadedDLL>
-      <ImportLibrary>$(TargetDir)lib\$(TargetName).lib</ImportLibrary>
-      <Profile>false</Profile>
-      <CLRThreadAttribute>DefaultThreadingAttribute</CLRThreadAttribute>
-      <CLRImageType>Default</CLRImageType>
-      <LinkErrorReporting>PromptImmediately</LinkErrorReporting>
-      <CLRUnmanagedCodeCheck>false</CLRUnmanagedCodeCheck>
-      <ProfileGuidedDatabase />
-    </Link>
     <Midl>
       <AdditionalIncludeDirectories>.;$(SolutionDir)\3rd Party;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
