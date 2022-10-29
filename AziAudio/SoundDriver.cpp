@@ -37,7 +37,7 @@ void SoundDriver::AI_LenChanged(u8 *start, u32 length)
 			Sleep(1);
 #else
 			// TODO: We need to support non-windows in another way
-			assert(0);
+			usleep(1);
 #endif
 		}
 	}
