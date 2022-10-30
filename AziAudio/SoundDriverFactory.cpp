@@ -10,7 +10,9 @@
 ****************************************************************************/
 #include "SoundDriverFactory.h"
 #include "NoSoundDriver.h"
-#ifndef OS_ANDROID
+#ifdef OS_ANDROID
+#include "AndroidSoundDriver.h"
+#else
 #include "DirectSoundDriver.h"
 #include "DirectSoundDriverLegacy.h"
 #include "WASAPISoundDriver.h"
@@ -26,7 +28,9 @@ int SoundDriverFactory::InitDrivers()
 {
 	return
 		NoSoundDriver::ClassRegistered
-#ifndef OS_ANDROID
+#ifdef OS_ANDROID
+		+ AndroidSoundDriver::ClassRegistered
+#else
 		+ DirectSoundDriver::ClassRegistered
 		+ DirectSoundDriverLegacy::ClassRegistered
 		+ WASAPISoundDriver::ClassRegistered 

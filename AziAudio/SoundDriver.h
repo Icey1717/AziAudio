@@ -29,6 +29,63 @@
 #define SND_IS_NOT_EMPTY 0x4000000
 #define SND_IS_FULL		 0x8000000
 
+#ifndef _WIN32
+class clMutex
+{
+public:
+	clMutex()
+	{
+#ifdef _WIN32
+		if (m_hMutex == NULL)
+		{
+			m_hMutex = CreateMutex(NULL, FALSE, NULL);
+		}
+#else
+		pthread_mutex_init(&TheMutex, NULL);
+#endif
+	}
+
+	/// Enter the critical section -- other threads are locked out
+	void Lock() const
+	{
+#ifdef _WIN32
+		ReleaseMutex(m_hMutex);
+#else
+		pthread_mutex_lock(&TheMutex);
+#endif
+	}
+
+	/// Leave the critical section
+	void Unlock() const
+	{
+#ifdef _WIN32
+		WaitForSingleObject(m_hMutex, INFINITE);
+#else
+		pthread_mutex_unlock(&TheMutex);
+#endif
+	}
+
+	~clMutex()
+	{
+#ifdef _WIN32
+		if (m_hMutex != NULL)
+		{
+			CloseHandle(m_hMutex);
+			m_hMutex = NULL;
+	}
+#else
+		pthread_mutex_destroy(&TheMutex);
+#endif
+	}
+
+#ifdef _WIN32
+	HANDLE m_hMutex;
+#else
+	mutable pthread_mutex_t TheMutex;
+#endif
+};
+#endif
+
 class SoundDriver :
 	public SoundDriverInterface
 {
@@ -58,11 +115,7 @@ protected:
 	bool m_isValid;
 
 	// Mutex Handle
-#ifdef _WIN32
-	HANDLE m_hMutex;
-#else
-	pthread_mutex_t m_Mutex;
-#endif
+	clMutex m_Mutex;
 
 	// Variables for AI DMA emulation
 	//int m_AI_CurrentDMABuffer; // Currently playing AI Buffer
@@ -91,7 +144,7 @@ protected:
 #ifdef _WIN32
 		m_hMutex = NULL;
 #else
-		m_Mutex = {};
+		m_Mutex;
 #endif
 	}
 };

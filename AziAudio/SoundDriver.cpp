@@ -36,7 +36,6 @@ void SoundDriver::AI_LenChanged(u8 *start, u32 length)
 #ifdef _WIN32
 			Sleep(1);
 #else
-			// TODO: We need to support non-windows in another way
 			usleep(1);
 #endif
 		}
@@ -45,11 +44,7 @@ void SoundDriver::AI_LenChanged(u8 *start, u32 length)
 	//*********************** Buffer Overflow *****************
 	lastLength = length;
 
-#ifdef _WIN32
-	WaitForSingleObject(m_hMutex, INFINITE);
-#else
-	puts("[AI_LenChanged] To do:  Working non-Win32 mutex timing.");
-#endif
+	m_Mutex.Lock();
 	BufferAudio();
 #if 1
 	if (m_AI_DMASecondaryBytes > 0)
@@ -87,9 +82,7 @@ void SoundDriver::AI_LenChanged(u8 *start, u32 length)
 	}
 	BufferAudio();
 
-#ifdef _WIN32
-	ReleaseMutex(m_hMutex);
-#endif
+	m_Mutex.Unlock();
 #if 1
 	// Bleed off some of this buffer to smooth out audio
 	if ((length < m_MaxBufferSize) && (Configuration::getSyncAudio() == true) && m_AI_DMASecondaryBytes > 0)
@@ -103,8 +96,7 @@ void SoundDriver::AI_LenChanged(u8 *start, u32 length)
 #ifdef _WIN32
 			Sleep(1);
 #else
-			// TODO: We need to support non-windows in another way
-			assert(0);
+			usleep(1);
 #endif
 		}
 	}
@@ -114,8 +106,8 @@ void SoundDriver::AI_LenChanged(u8 *start, u32 length)
 void SoundDriver::AI_SetFrequency(u32 Frequency)
 {
 	m_SamplesPerSecond = Frequency;
-	SetFrequency(Frequency);
 	m_MaxBufferSize = (u32)((Frequency / Configuration::getBufferFPS())) * 4 * Configuration::getBufferLevel();
+	SetFrequency(Frequency);
 	m_BufferRemaining = 0;
 	m_CurrentReadLoc = m_CurrentWriteLoc = m_BufferRemaining = 0;
 	//test.EndWaveOut();
@@ -129,9 +121,7 @@ u32 SoundDriver::AI_ReadLength()
 
 	if (Configuration::getAIEmulation() == false || lastLength == 0)
 		return 0;
-#ifdef _WIN32
-	WaitForSingleObject(m_hMutex, INFINITE);
-#endif
+	m_Mutex.Lock();
 	if (m_BufferRemaining > (lastLength*2 + lastLength/4))
 	{
 		retVal = lastLength;  // TODO: I do not remember why I set this...
@@ -154,9 +144,7 @@ u32 SoundDriver::AI_ReadLength()
 		lastReadCount = 0;
 		lastReadLength = retVal;
 	}
-#ifdef _WIN32
-	ReleaseMutex(m_hMutex);
-#endif
+	m_Mutex.Unlock();
 	return (retVal & ~0x7);
 }
 
@@ -173,14 +161,7 @@ void SoundDriver::AI_Startup()
 	lastReadCount = 0;
 	lastLength = 0;
 
-#ifdef _WIN32
-	if (m_hMutex == NULL)
-	{
-		m_hMutex = CreateMutex(NULL, FALSE, NULL);
-	}
-#else
-	// to do
-#endif
+
 	StartAudio();
 	SetVolume(Configuration::getVolume());
 }
@@ -190,15 +171,7 @@ void SoundDriver::AI_Shutdown()
 	StopAudio();
 	DeInitialize();
 	m_BufferRemaining = 0;
-#ifdef _WIN32
-	if (m_hMutex != NULL)
-	{
-		CloseHandle(m_hMutex);
-		m_hMutex = NULL;
-	}
-#else
-	// to do
-#endif
+
 	//test.EndWaveOut();
 }
 
@@ -284,11 +257,7 @@ u32 SoundDriver::LoadAiBuffer(u8 *start, u32 length)
 		return length;
 	}
 
-#ifdef _WIN32
-	WaitForSingleObject(m_hMutex, INFINITE);
-#else
-	puts("[LoadAIBuffer] To do:  non-Win32 m_hMutex");
-#endif
+	m_Mutex.Lock();
 
 	// Step 0: Replace depleted stored buffer for next run
 	BufferAudio();
@@ -325,11 +294,7 @@ u32 SoundDriver::LoadAiBuffer(u8 *start, u32 length)
 	BufferAudio();	
 	//test.WriteData(ptrStart, length);
 
-#ifdef _WIN32
-	ReleaseMutex(m_hMutex);
-#else
-	// to do
-#endif
+	m_Mutex.Unlock();
 	assert(bytesToMove == 0);
 	return (length - bytesToMove);
 }
