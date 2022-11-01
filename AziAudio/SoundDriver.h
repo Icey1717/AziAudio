@@ -29,17 +29,13 @@
 #define SND_IS_NOT_EMPTY 0x4000000
 #define SND_IS_FULL		 0x8000000
 
-#ifndef _WIN32
 class clMutex
 {
 public:
 	clMutex()
 	{
 #ifdef _WIN32
-		if (m_hMutex == NULL)
-		{
-			m_hMutex = CreateMutex(NULL, FALSE, NULL);
-		}
+		m_hMutex = CreateMutex(NULL, FALSE, NULL);
 #else
 		pthread_mutex_init(&TheMutex, NULL);
 #endif
@@ -49,7 +45,7 @@ public:
 	void Lock() const
 	{
 #ifdef _WIN32
-		ReleaseMutex(m_hMutex);
+		WaitForSingleObject(m_hMutex, INFINITE);
 #else
 		pthread_mutex_lock(&TheMutex);
 #endif
@@ -59,7 +55,7 @@ public:
 	void Unlock() const
 	{
 #ifdef _WIN32
-		WaitForSingleObject(m_hMutex, INFINITE);
+		ReleaseMutex(m_hMutex);
 #else
 		pthread_mutex_unlock(&TheMutex);
 #endif
@@ -84,7 +80,6 @@ public:
 	mutable pthread_mutex_t TheMutex;
 #endif
 };
-#endif
 
 class SoundDriver :
 	public SoundDriverInterface
@@ -141,10 +136,5 @@ protected:
 
 	SoundDriver(){
 		m_audioIsInitialized = false;
-#ifdef _WIN32
-		m_hMutex = NULL;
-#else
-		m_Mutex;
-#endif
 	}
 };

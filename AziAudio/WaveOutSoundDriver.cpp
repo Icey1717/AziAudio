@@ -61,7 +61,7 @@ WaveOutSoundDriver::~WaveOutSoundDriver()
 void WaveOutSoundDriver::Teardown()
 {
 	DEBUG_OUTPUT("WO: Teardown()\n");
-	WaitForSingleObject(m_hMutex, INFINITE);
+	m_Mutex.Lock();
 	bIsDone = true;
 	if (m_hWave != NULL)
 	{
@@ -79,7 +79,7 @@ void WaveOutSoundDriver::Teardown()
 	m_hWave = NULL;
 	m_OutputBuffers = NULL;
 	m_BufferMemory = NULL;
-	ReleaseMutex(m_Instance->m_hMutex);
+	m_Mutex.Unlock();
 	DEBUG_OUTPUT("WO: Teardown() done\n");
 }
 
@@ -203,7 +203,7 @@ void CALLBACK WaveOutSoundDriver::waveOutProc(HWAVEOUT hwo, UINT uMsg, DWORD_PTR
 			DEBUG_OUTPUT("WO: WOM_CLOSE\n");
 			break;
 		case WOM_DONE:
-			WaitForSingleObject(m_Instance->m_hMutex, INFINITE);
+			m_Instance->m_Mutex.Lock();
 			if (m_Instance->bIsDone) return;
 			waveOutUnprepareHeader(m_Instance->m_hWave, (LPWAVEHDR)dwParam1, sizeof(WAVEHDR));
 			waveheader = (LPWAVEHDR)dwParam1;
@@ -215,7 +215,7 @@ void CALLBACK WaveOutSoundDriver::waveOutProc(HWAVEOUT hwo, UINT uMsg, DWORD_PTR
 			m_Instance->LoadAiBuffer((u8 *)m_Instance->m_OutputBuffers[index].lpData, m_Instance->m_OutputBuffersSize);
 			waveOutPrepareHeader(m_Instance->m_hWave, &m_Instance->m_OutputBuffers[index], sizeof(WAVEHDR));
 			waveOutWrite(m_Instance->m_hWave, &m_Instance->m_OutputBuffers[index], sizeof(WAVEHDR));
-			ReleaseMutex(m_Instance->m_hMutex);
+			m_Instance->m_Mutex.Unlock();
 			break;
 	}
 }
